@@ -2,6 +2,7 @@ use clap::Parser;
 
 mod commands;
 mod tasks;
+mod utils;
 
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
