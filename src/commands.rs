@@ -1,20 +1,21 @@
-use clap::{command, Parser, Subcommand};
+use clap::{Parser, Subcommand};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
+#[command(propagate_version = true)]
 pub struct Args {
-    /// Add a task
-    #[arg(short, long, num_args = 0.. )]
-    pub add: Vec<String>,
-
-    /// List all you tasks. This includes todo, done and cancelled tasks
     #[command(subcommand)]
-    pub list: Option<Commands>,
+    pub command: Commands,
 }
 
 #[derive(Subcommand, Clone, Debug)]
 pub enum Commands {
-    /// List all you tasks. This includes todo, done and cancelled tasks
-    #[command()]
+    /// Add a task
+    Add { task: Vec<String> },
+    /// List all tasks
     List,
+    /// Mark task as done
+    Done { id: u32 },
+    /// Ignore a task
+    Ignore { id: u32 },
 }

@@ -8,8 +8,8 @@ pub const _TASK_IGNORED: &str = "❌";
 // Error messages
 pub mod exit_code {
     pub const _SUCCESS: i32 = 0;
-    pub const _NOT_FOUND: i32 = 0; // Will get back to this with linux error code
-    pub const _UNABLE_TO_WRITE: i32 = 0; // Will get back to this with linux error code
+    pub const NOT_FOUND: i32 = 0; // Will get back to this with linux error code
+    pub const UNABLE_TO_WRITE: i32 = 0; // Will get back to this with linux error code
 }
 
 #[derive(Tabled, Serialize, Deserialize)]
