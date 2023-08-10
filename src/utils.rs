@@ -2,8 +2,9 @@ use serde::{Deserialize, Serialize};
 use tabled::Tabled;
 
 // Task related colored icons
-pub const _TASK_DONE: &str = "✅";
-pub const _TASK_IGNORED: &str = "❌";
+pub const TASK_DONE: &str = "✅";
+pub const TASK_IGNORED: &str = "❌";
+pub const NOT_DECIDED: &str = "➖";
 
 // Error messages
 pub mod exit_code {

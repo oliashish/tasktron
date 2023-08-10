@@ -1,16 +1,17 @@
 use std::path::Path;
 
 use anyhow::anyhow;
+
 use chrono::{NaiveDate, Utc};
 use log::error;
 use serde::{Deserialize, Serialize};
 
 use tabled::{
-    settings::{Color, Style},
+    settings::{object::Segment, Modify, Style, Width},
     Table, Tabled,
 };
 
-use crate::utils::exit_code;
+use crate::utils::{exit_code, NOT_DECIDED, TASK_DONE, TASK_IGNORED};
 
 #[derive(Debug, Serialize, Deserialize, Tabled)]
 pub struct Task {
@@ -18,6 +19,14 @@ pub struct Task {
     pub created: NaiveDate,
     pub completed: bool,
     pub cancelled: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize, Tabled)]
+pub struct TabledTask {
+    pub task: String,
+    pub created: NaiveDate,
+    pub completed: String,
+    pub cancelled: String,
 }
 
 pub async fn add_tasks(args: &Vec<String>, home_dir: &Path) -> Result<(), anyhow::Error> {
@@ -63,11 +72,29 @@ pub async fn list_tasks(home_dir: &Path) -> Result<(), anyhow::Error> {
         anyhow!("")
     })?;
 
-    let task_table = Table::builder(json_task)
-        .index()
+    let mut task_table_entries = Vec::new();
+
+    for task in &json_task {
+        task_table_entries.push(TabledTask {
+            task: task.task.to_owned(),
+            created: task.created,
+            completed: if task.completed {
+                TASK_DONE.to_owned()
+            } else {
+                NOT_DECIDED.to_owned()
+            },
+            cancelled: if task.cancelled {
+                TASK_IGNORED.to_owned()
+            } else {
+                NOT_DECIDED.to_owned()
+            },
+        })
+    }
+
+    let task_table = Table::builder(task_table_entries)
         .build()
-        .with(Style::modern())
-        .with(Color::FG_BRIGHT_GREEN)
+        .with(Style::rounded())
+        .with(Modify::new(Segment::all()).with(Width::wrap(50)))
         .to_string();
 
     println!("{}", task_table);
